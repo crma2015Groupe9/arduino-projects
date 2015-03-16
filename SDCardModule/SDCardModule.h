@@ -14,6 +14,7 @@ class SDCardModule
 
 	private:
 		byte _csPin;
+		byte _selected;
 };
 
 #endif

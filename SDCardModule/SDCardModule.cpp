@@ -3,7 +3,7 @@
 
 SDCardModule::SDCardModule(byte csPin){
 	_csPin = csPin;
-	_usePin = true;
+  _selected = false;
 }
 
 void SDCardModule::init(){

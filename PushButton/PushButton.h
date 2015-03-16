@@ -14,6 +14,7 @@ class PushButton
 		void update();
 
 		boolean isPressed();
+		boolean stateChanged();
 		boolean clickDown();
 		boolean clickUp();
 	private:
@@ -21,6 +22,7 @@ class PushButton
 		boolean _defaultValue;
 		boolean _usePin;
 		boolean _pinValue;
+		boolean _previousPinValue;
 		boolean _waitForPush;
 		boolean _clickDown;
 		boolean _clickUp;

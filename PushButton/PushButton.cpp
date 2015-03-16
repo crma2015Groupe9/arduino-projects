@@ -15,6 +15,7 @@ void PushButton::init(boolean defaultValue){
 	_defaultValue = defaultValue;
 	if (_usePin){pinMode(_pin, INPUT);}
 	_pinValue = _usePin ? digitalRead(_pin) : _defaultValue;
+	_previousPinValue = _pinValue;
 	_waitForPush = !isPressed();
 	_clickDown = false;
 	_clickUp = false;
@@ -25,6 +26,7 @@ void PushButton::init(){
 }
 
 void PushButton::update(boolean digitalValue){
+	_previousPinValue = _pinValue;
 	_pinValue = _usePin ? digitalRead(_pin) : digitalValue;
 
 	_clickDown = false;
@@ -44,6 +46,10 @@ void PushButton::update(boolean digitalValue){
 
 void PushButton::update(){
 	update(_defaultValue);
+}
+
+boolean PushButton::stateChanged(){
+	return _pinValue != _previousPinValue;
 }
 
 boolean PushButton::isPressed(){
