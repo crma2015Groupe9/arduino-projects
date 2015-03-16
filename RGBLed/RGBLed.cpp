@@ -1,22 +1,34 @@
 #include "Arduino.h"
 #include "RGBLed.h"
 
+RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin, colorChangeHandler handler, byte mark){
+	_redPin = redPin;
+	_greenPin = greenPin;
+	_bluePin = bluePin;
+	_useHandler = true;
+	_colorChangeHandler = handler;
+	_mark = mark;
+}
+
 RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin, colorChangeHandler handler){
 	_redPin = redPin;
 	_greenPin = greenPin;
 	_bluePin = bluePin;
 	_useHandler = true;
 	_colorChangeHandler = handler;
+	_mark = 0;
 }
 
 RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin){
+	_mark = 0;
 	_redPin = redPin;
 	_greenPin = greenPin;
 	_bluePin = bluePin;
 	_useHandler = false;
 }
 
-RGBLed::RGBLed(colorChangeHandler handler){
+RGBLed::RGBLed(colorChangeHandler handler, byte mark){
+	_mark = mark;
 	_redPin = 0;
 	_greenPin = 0;
 	_bluePin = 0;
@@ -24,7 +36,13 @@ RGBLed::RGBLed(colorChangeHandler handler){
 	_colorChangeHandler = handler;
 }
 
+byte RGBLed::mark(){
+	return _mark;
+}
+
 void RGBLed::init(byte red, byte green, byte blue){
+	_on = true;
+
 	if (!_useHandler)
 	{
 		pinMode(_redPin, OUTPUT);
@@ -48,12 +66,16 @@ void RGBLed::changeColor(byte red, byte green, byte blue){
 	_green = green;
 	_blue = blue;
 
+	_colorChange(_red, _green, _blue);
+}
+
+void RGBLed::_colorChange(byte red, byte green, byte blue){
 	if (_useHandler)
 	{
-		_colorChangeHandler(_red, _green, _blue);
+		_on ? _colorChangeHandler(red, green, blue, _redPin, _greenPin, _bluePin, _mark) : _colorChangeHandler(0, 0, 0, _redPin, _greenPin, _bluePin, _mark);
 	}
 	else{
-		_defaultColorChangeHandler(_red, _green, _blue);
+		_on ? _defaultColorChangeHandler(red, green, blue) : _defaultColorChangeHandler(0, 0, 0);
 	}
 }
 
@@ -101,4 +123,70 @@ byte RGBLed::getGreen(){
 
 byte RGBLed::getBlue(){
 	return _blue;
+}
+
+void RGBLed::off(){
+	_on = false;
+	_colorChange(_red, _green, _blue);
+}
+
+void RGBLed::on(){
+	_on = true;
+	_colorChange(_red, _green, _blue);
+}
+
+void RGBLed::toggle(){
+	_on ? off() : on();
+}
+
+byte RGBLed::_calculNewValue(byte baseValue, byte addValue, byte lessValue){
+	int newValue;
+	newValue = (int)baseValue+(int)addValue-(int)lessValue;
+	if(newValue > 255){
+		newValue = 255;
+	}
+	else if(newValue < 0){
+		newValue = 0;
+	}
+
+	return (byte)newValue;
+}
+
+void RGBLed::moreRed(byte value){
+	r(_calculNewValue(getRed(), value, 0));
+}
+void RGBLed::moreRed(){
+	moreRed(1);
+}
+void RGBLed::lessRed(byte value){
+	r(_calculNewValue(getRed(), 0, value));
+}
+void RGBLed::lessRed(){
+	lessRed(1);
+}
+
+void RGBLed::moreGreen(byte value){
+	g(_calculNewValue(getGreen(), value, 0));
+}
+void RGBLed::moreGreen(){
+	moreGreen(1);
+}
+void RGBLed::lessGreen(byte value){
+	g(_calculNewValue(getGreen(), 0, value));
+}
+void RGBLed::lessGreen(){
+	lessGreen(1);
+}
+
+void RGBLed::moreBlue(byte value){
+	b(_calculNewValue(getBlue(), value, 0));
+}
+void RGBLed::moreBlue(){
+	moreBlue(1);
+}
+void RGBLed::lessBlue(byte value){
+	b(_calculNewValue(getBlue(), 0, value));
+}
+void RGBLed::lessBlue(){
+	lessBlue(1);
 }
