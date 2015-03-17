@@ -95,7 +95,7 @@ void RGBLed::_colorChange(byte red, byte green, byte blue){
 }
 
 byte RGBLed::_applyIntensity(byte value){
-	return (byte)((unsigned long)value*(unsigned long)intensity/255);
+	return (byte)((unsigned long)value*(unsigned long)_intensity/255);
 }
 
 void RGBLed::rgbi(byte red, byte green, byte blue, byte intensity){
@@ -103,7 +103,7 @@ void RGBLed::rgbi(byte red, byte green, byte blue, byte intensity){
 }
 
 void RGBLed::rgb(byte red, byte green, byte blue){
-	changeColor(red, green, blue, _intensity);
+	changeColor(red, green, blue, 255);
 }
 
 void RGBLed::i(byte intensity){

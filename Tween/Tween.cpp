@@ -11,6 +11,11 @@ Tween::Tween(int startValue, int endValue, unsigned long duration, unsigned long
 	_ended = false;
 	_ready = true;
 	_pause = false;
+	_loop = false;
+	_loopWithDelay = false;
+	_loopDelay = 0;
+	_loopCount = 0;
+	_maxNumberOfLoop = 0;
 }
 
 Tween::Tween(int startValue, int endValue, unsigned long duration){
@@ -23,6 +28,11 @@ Tween::Tween(int startValue, int endValue, unsigned long duration){
 	_ended = false;
 	_ready = true;
 	_pause = false;
+	_loop = false;
+	_loopWithDelay = false;
+	_loopDelay = 0;
+	_loopCount = 0;
+	_maxNumberOfLoop = 0;
 }
 
 Tween::Tween(){
@@ -35,6 +45,11 @@ Tween::Tween(){
 	_ended = false;
 	_ready = false;
 	_pause = false;
+	_loop = false;
+	_loopWithDelay = false;
+	_loopDelay = 0;
+	_loopCount = 0;
+	_maxNumberOfLoop = 0;
 }
 
 void Tween::update(unsigned long deltaTime){
@@ -50,6 +65,14 @@ void Tween::update(unsigned long deltaTime){
 			_cursor = 1;
 			_currentTime = _duration+_delay;
 			_ended = true;
+
+			if(_loop && (_maxNumberOfLoop == 0 || (_loopCount+1) < _maxNumberOfLoop)){
+				_ended = false;
+				_ready = true;
+				_currentTime = 0;
+				_delay = _loopWithDelay ? _loopDelay : _delay;
+				_loopCount++;
+			}
 		}
 	}
 }
@@ -63,6 +86,59 @@ void Tween::transition(int startValue, int endValue, unsigned long duration, uns
 	_cursor = 0;
 	_ended = false;
 	_ready = true;
+	_loop = false;
+	_loopWithDelay = false;
+	_loopDelay = 0;
+	_loopCount = 0;
+	_maxNumberOfLoop = 0;
+}
+
+void Tween::loop(unsigned int numberOfLoop){
+	_loop = true;
+	_loopWithDelay = false;
+	_maxNumberOfLoop = numberOfLoop;
+	_loopCount = 0;
+}
+
+void Tween::addLoop(unsigned int numberOfLoop){
+	_maxNumberOfLoop += numberOfLoop;
+}
+
+void Tween::addLoop(){
+	addLoop(1);
+}
+
+void Tween::loop(){
+	loop(0);
+}
+
+void Tween::loopWithDelay(){
+	loopWithDelay(_delay);
+}
+
+void Tween::loopWithDelay(unsigned long delay){
+	_loop = true;
+	_loopWithDelay = true;
+	_loopDelay = delay;
+	_maxNumberOfLoop = 0;
+	_loopCount = 0;
+}
+
+void Tween::loopWithDelay(unsigned long delay, unsigned int numberOfLoop){
+	loopWithDelay(delay);
+	_maxNumberOfLoop = numberOfLoop;
+}
+
+unsigned int Tween::loopCount(){
+	return _loopCount;
+}
+
+boolean Tween::isEnded(){
+	return _ended;
+}
+
+void Tween::stopLoop(){
+	_loop = false;
 }
 
 void Tween::pause(){
@@ -83,12 +159,12 @@ void Tween::replay(){
 	play();
 }
 
-void replayWithDelay(unsigned long delay){
+void Tween::replayWithDelay(unsigned long delay){
 	_delay = delay;
 	replayWithDelay();
 }
 
-void replayWithDelay(){
+void Tween::replayWithDelay(){
 	resetWithDelay();
 	play();
 }

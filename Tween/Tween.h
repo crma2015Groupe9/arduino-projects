@@ -17,6 +17,17 @@ class Tween
 		void transitionTo(int endValue, unsigned long duration);
 		void transitionTo(int endValue);
 
+		void loop(unsigned int numberOfLoop);
+		void loop();
+		void loopWithDelay();
+		void loopWithDelay(unsigned long delay);
+		void loopWithDelay(unsigned long delay, unsigned int numberOfLoop);
+		void addLoop(unsigned int numberOfLoop);
+		void addLoop();
+
+		void stopLoop();
+		unsigned int loopCount();
+
 		long linearValue();
   		long easeInQuadValue();
   		long easeOutQuadValue();
@@ -56,14 +67,21 @@ class Tween
 		void stop(boolean restartBeforeDelay);
 		void stop();
 
+		boolean isEnded();
+
 	private:
 		boolean _ended;
 		boolean _ready;
 		boolean _pause;
+		boolean _loop;
+		boolean _loopWithDelay;
+		unsigned int _maxNumberOfLoop;
+		unsigned int _loopCount;
 		int _startValue;
 		int _endValue;
 		unsigned long _duration;
 		unsigned long _delay;
+		unsigned long _loopDelay;
 		unsigned long _currentTime;
 		double _cursor;
 
