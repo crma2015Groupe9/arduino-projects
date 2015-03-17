@@ -1,7 +1,7 @@
 #include "Arduino.h"
 #include "RGBLed.h"
 
-RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin, colorChangeHandler handler, byte mark){
+RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin, RGBLed_colorChangeHandler handler, byte mark){
 	_redPin = redPin;
 	_greenPin = greenPin;
 	_bluePin = bluePin;
@@ -10,7 +10,7 @@ RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin, colorChangeHandler hand
 	_mark = mark;
 }
 
-RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin, colorChangeHandler handler){
+RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin, RGBLed_colorChangeHandler handler){
 	_redPin = redPin;
 	_greenPin = greenPin;
 	_bluePin = bluePin;
@@ -27,7 +27,7 @@ RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin){
 	_useHandler = false;
 }
 
-RGBLed::RGBLed(colorChangeHandler handler, byte mark){
+RGBLed::RGBLed(RGBLed_colorChangeHandler handler, byte mark){
 	_mark = mark;
 	_redPin = 0;
 	_greenPin = 0;
