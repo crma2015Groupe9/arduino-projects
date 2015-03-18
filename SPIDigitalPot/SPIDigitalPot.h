@@ -15,8 +15,6 @@ class SPIDigitalPot
 		SPIDigitalPot(byte csPin);
 		SPIDigitalPot(byte csPin, byte numberOfChannels);
 
-		void init(byte* startValues, byte numberOfInitializedChannels);
-		void init(byte* startValues);
 		void init();
 		void reverseMode();
 		void regularMode();

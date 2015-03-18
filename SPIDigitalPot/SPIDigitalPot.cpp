@@ -16,22 +16,9 @@ SPIDigitalPot::SPIDigitalPot(byte csPin){
 	_selectedChannel = 1;
 }
 
-void SPIDigitalPot::init(byte* startValues, byte numberOfInitializedChannels){
-	pinMode(_csPin, OUTPUT);
-	digitalWrite(_csPin, HIGH);
-
-	multipleWrite(startValues, numberOfInitializedChannels);
-}
-
-void SPIDigitalPot::init(byte* startValues){
-	init(startValues, _numberOfChannels);
-}
-
 void SPIDigitalPot::init(){
 	pinMode(_csPin, OUTPUT);
 	digitalWrite(_csPin, HIGH);
-
-	writeForAll(0);
 }
 
 boolean SPIDigitalPot::selectChannel(byte channel){
@@ -138,7 +125,7 @@ void SPIDigitalPot::write(byte channel, byte value){
 
 void SPIDigitalPot::write(byte value){
 	if (_selectedChannel > 0)
-	{
+	{		
 		digitalWrite(_csPin,LOW);
 	  	SPI.transfer(_selectedChannel-1);
 	  	SPI.transfer(_reverseMode ? 255-value : value);

@@ -1,7 +1,7 @@
 #include "Arduino.h"
 #include "RGBLed.h"
 
-RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin, RGBLed_colorChangeHandler handler, byte mark){
+RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin, colorChangeHandler handler, byte mark){
 	_redPin = redPin;
 	_greenPin = greenPin;
 	_bluePin = bluePin;
@@ -10,7 +10,7 @@ RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin, RGBLed_colorChangeHandl
 	_mark = mark;
 }
 
-RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin, RGBLed_colorChangeHandler handler){
+RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin, colorChangeHandler handler){
 	_redPin = redPin;
 	_greenPin = greenPin;
 	_bluePin = bluePin;
@@ -27,7 +27,7 @@ RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin){
 	_useHandler = false;
 }
 
-RGBLed::RGBLed(RGBLed_colorChangeHandler handler, byte mark){
+RGBLed::RGBLed(colorChangeHandler handler, byte mark){
 	_mark = mark;
 	_redPin = 0;
 	_greenPin = 0;
@@ -40,7 +40,7 @@ byte RGBLed::mark(){
 	return _mark;
 }
 
-void RGBLed::init(byte red, byte green, byte blue, byte intensity){
+void RGBLed::init(){
 	_on = true;
 
 	if (!_useHandler)
@@ -50,20 +50,10 @@ void RGBLed::init(byte red, byte green, byte blue, byte intensity){
 		pinMode(_bluePin, OUTPUT);
 	}
 
-	_red = red;
-	_green = green;
-	_blue = blue;
-	_intensity = intensity;
-
-	changeColor(_red, _green, _blue);
-}
-
-void RGBLed::init(byte red, byte green, byte blue){
-	init(red, green, blue, 255);
-}
-
-void RGBLed::init(){
-	init(0, 0, 0);
+	_red = 0;
+	_green = 0;
+	_blue = 0;
+	_intensity = 255;
 }
 
 void RGBLed::changeColor(byte red, byte green, byte blue, byte intensity){
