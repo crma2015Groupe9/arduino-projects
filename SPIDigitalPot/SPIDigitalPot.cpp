@@ -1,12 +1,53 @@
 #include "Arduino.h"
 #include "SPIDigitalPot.h"
 
+SPIDigitalPot::SPIDigitalPot(byte csPin, byte numberOfChannels, SPIDigitalPot_slaveSelectHandler handler, byte mark){
+	_reverseMode = false;
+	_csPin = csPin;
+	_numberOfChannels = numberOfChannels;
+	_selectedChannel = 1;
+	_mark = mark;
+	_slaveSelectUseHandler = true;
+	_slaveSelectHandler = handler;
+}
+
+SPIDigitalPot::SPIDigitalPot(byte csPin, byte numberOfChannels, SPIDigitalPot_slaveSelectHandler handler){
+	_reverseMode = false;
+	_csPin = csPin;
+	_numberOfChannels = numberOfChannels;
+	_selectedChannel = 1;
+	_mark = 0;
+	_slaveSelectUseHandler = true;
+	_slaveSelectHandler = handler;
+}
 
 SPIDigitalPot::SPIDigitalPot(byte csPin, byte numberOfChannels){
 	_reverseMode = false;
 	_csPin = csPin;
 	_numberOfChannels = numberOfChannels;
 	_selectedChannel = 1;
+	_mark = false;
+	_slaveSelectUseHandler = false;
+}
+
+SPIDigitalPot::SPIDigitalPot(byte csPin, SPIDigitalPot_slaveSelectHandler handler, byte mark){
+	_reverseMode = false;
+	_csPin = csPin;
+	_numberOfChannels = 6;
+	_selectedChannel = 1;
+	_mark = mark;
+	_slaveSelectUseHandler = true;
+	_slaveSelectHandler = handler;
+}
+
+SPIDigitalPot::SPIDigitalPot(byte csPin, SPIDigitalPot_slaveSelectHandler handler){
+	_reverseMode = false;
+	_csPin = csPin;
+	_numberOfChannels = 6;
+	_selectedChannel = 1;
+	_mark = 0;
+	_slaveSelectUseHandler = true;
+	_slaveSelectHandler = handler;
 }
 
 SPIDigitalPot::SPIDigitalPot(byte csPin){
@@ -14,6 +55,28 @@ SPIDigitalPot::SPIDigitalPot(byte csPin){
 	_csPin = csPin;
 	_numberOfChannels = 6;
 	_selectedChannel = 1;
+	_mark = 0;
+	_slaveSelectUseHandler = false;
+}
+		
+SPIDigitalPot::SPIDigitalPot(SPIDigitalPot_slaveSelectHandler handler, byte mark){
+	_reverseMode = false;
+	_csPin = 0;
+	_numberOfChannels = 6;
+	_selectedChannel = 1;
+	_mark = mark;
+	_slaveSelectUseHandler = true;
+	_slaveSelectHandler = handler;
+}
+
+SPIDigitalPot::SPIDigitalPot(SPIDigitalPot_slaveSelectHandler handler, byte mark, byte numberOfChannels){
+	_reverseMode = false;
+	_csPin = 0;
+	_numberOfChannels = numberOfChannels;
+	_selectedChannel = 1;
+	_mark = mark;
+	_slaveSelectUseHandler = true;
+	_slaveSelectHandler = handler;
 }
 
 void SPIDigitalPot::init(){
@@ -125,11 +188,11 @@ void SPIDigitalPot::write(byte channel, byte value){
 
 void SPIDigitalPot::write(byte value){
 	if (_selectedChannel > 0)
-	{		
-		digitalWrite(_csPin,LOW);
+	{	
+		_slaveSelectUseHandler ? _slaveSelectHandler(LOW, _csPin, _mark) : digitalWrite(_csPin,LOW);
 	  	SPI.transfer(_selectedChannel-1);
 	  	SPI.transfer(_reverseMode ? 255-value : value);
-	  	digitalWrite(_csPin,HIGH);
+	  	_slaveSelectUseHandler ? _slaveSelectHandler(HIGH, _csPin, _mark) : digitalWrite(_csPin,HIGH);
 	}
 }
 

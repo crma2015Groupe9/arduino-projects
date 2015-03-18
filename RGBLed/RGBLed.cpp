@@ -1,7 +1,7 @@
 #include "Arduino.h"
 #include "RGBLed.h"
 
-RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin, colorChangeHandler handler, byte mark){
+RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin, RGBLed_colorChangeHandler handler, byte mark){
 	_redPin = redPin;
 	_greenPin = greenPin;
 	_bluePin = bluePin;
@@ -10,7 +10,7 @@ RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin, colorChangeHandler hand
 	_mark = mark;
 }
 
-RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin, colorChangeHandler handler){
+RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin, RGBLed_colorChangeHandler handler){
 	_redPin = redPin;
 	_greenPin = greenPin;
 	_bluePin = bluePin;
@@ -27,7 +27,7 @@ RGBLed::RGBLed(byte redPin, byte greenPin, byte bluePin){
 	_useHandler = false;
 }
 
-RGBLed::RGBLed(colorChangeHandler handler, byte mark){
+RGBLed::RGBLed(RGBLed_colorChangeHandler handler, byte mark){
 	_mark = mark;
 	_redPin = 0;
 	_greenPin = 0;
@@ -100,54 +100,6 @@ void RGBLed::i(byte intensity){
 	changeColor(_red, _green, _blue, intensity);
 }
 
-void RGBLed::ri(byte red, byte intensity){
-	changeColor(red, _green, _blue, intensity);
-}
-
-void RGBLed::r(byte red){
-	ri(red, _intensity);
-}
-
-void RGBLed::gi(byte green, byte intensity){
-	changeColor(_red, green, _blue, intensity);
-}
-
-void RGBLed::g(byte green){
-	gi(green, _intensity);
-}
-
-void RGBLed::bi(byte blue, byte intensity){
-	changeColor(_red, _green, blue, intensity);
-}
-
-void RGBLed::b(byte blue){
-	bi(blue, _intensity);
-}
-
-void RGBLed::rgi(byte red, byte green, byte intensity){
-	changeColor(red, green, _blue, intensity);
-}
-
-void RGBLed::rg(byte red, byte green){
-	rgi(red, green, _intensity);
-}
-
-void RGBLed::rbi(byte red, byte blue, byte intensity){
-	changeColor(red, _green, blue, intensity);
-}
-
-void RGBLed::rb(byte red, byte blue){
-	rbi(red, blue, _intensity);
-}
-
-void RGBLed::gbi(byte green, byte blue, byte intensity){
-	changeColor(_red, green, blue, intensity);
-}
-
-void RGBLed::gb(byte green, byte blue){
-	gbi(green, blue, _intensity);
-}
-
 void RGBLed::_defaultColorChangeHandler(byte red, byte green, byte blue){
 	analogWrite(_redPin, red);
 	analogWrite(_greenPin, green);
@@ -198,52 +150,52 @@ byte RGBLed::_calculNewValue(byte baseValue, byte addValue, byte lessValue){
 }
 
 void RGBLed::moreRed(byte value){
-	r(_calculNewValue(getRed(), value, 0));
+	rgbi(_calculNewValue(getRed(), value, 0), _green, _blue, _intensity);
 }
 void RGBLed::moreRed(){
 	moreRed(1);
 }
 void RGBLed::lessRed(byte value){
-	r(_calculNewValue(getRed(), 0, value));
+	rgbi(_calculNewValue(getRed(), 0, value), _green, _blue, _intensity);
 }
 void RGBLed::lessRed(){
 	lessRed(1);
 }
 
 void RGBLed::moreGreen(byte value){
-	g(_calculNewValue(getGreen(), value, 0));
+	rgbi(_red, _calculNewValue(getGreen(), value, 0), _blue, _intensity);
 }
 void RGBLed::moreGreen(){
 	moreGreen(1);
 }
 void RGBLed::lessGreen(byte value){
-	g(_calculNewValue(getGreen(), 0, value));
+	rgbi(_red, _calculNewValue(getGreen(), 0, value), _blue, _intensity);
 }
 void RGBLed::lessGreen(){
 	lessGreen(1);
 }
 
 void RGBLed::moreBlue(byte value){
-	b(_calculNewValue(getBlue(), value, 0));
+	rgbi(_red, _green, _calculNewValue(getBlue(), value, 0), _intensity);
 }
 void RGBLed::moreBlue(){
 	moreBlue(1);
 }
 void RGBLed::lessBlue(byte value){
-	b(_calculNewValue(getBlue(), 0, value));
+	rgbi(_red, _green, _calculNewValue(getBlue(), 0, value), _intensity);
 }
 void RGBLed::lessBlue(){
 	lessBlue(1);
 }
 
 void RGBLed::lighter(byte value){
-	i(_calculNewValue(getIntensity(), value, 0));
+	rgbi(_red, _green, _blue, _calculNewValue(getIntensity(), value, 0));
 }
 void RGBLed::lighter(){
 	lighter(1);
 }
 void RGBLed::darker(byte value){
-	i(_calculNewValue(getIntensity(), 0, value));
+	rgbi(_red, _green, _blue, _calculNewValue(getIntensity(), 0, value));
 }
 void RGBLed::darker(){
 	darker(1);

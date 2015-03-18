@@ -58,6 +58,7 @@ class Tween
 
 		void pause();
 		void play();
+		void toggle();
 		void reset();
 		void replay();
 		void replayWithDelay(unsigned long delay);

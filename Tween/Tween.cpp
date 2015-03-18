@@ -149,6 +149,10 @@ void Tween::play(){
 	_pause = false;
 }
 
+void Tween::toggle(){
+	_pause ? play() : pause();
+}
+
 void Tween::reset(){
 	_currentTime = _delay;
 	_ended = false;

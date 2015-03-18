@@ -9,11 +9,23 @@
 #include <SPI.h>
 #include "Arduino.h"
 
+class SPIDigitalPot;
+typedef void (*SPIDigitalPot_slaveSelectHandler)(boolean, byte, byte);
+//state, cspin, mark
+
 class SPIDigitalPot
 {
 	public:
-		SPIDigitalPot(byte csPin);
+		SPIDigitalPot(byte csPin, byte numberOfChannels, SPIDigitalPot_slaveSelectHandler handler, byte mark);
+		SPIDigitalPot(byte csPin, byte numberOfChannels, SPIDigitalPot_slaveSelectHandler handler);
 		SPIDigitalPot(byte csPin, byte numberOfChannels);
+
+		SPIDigitalPot(byte csPin, SPIDigitalPot_slaveSelectHandler handler, byte mark);
+		SPIDigitalPot(byte csPin, SPIDigitalPot_slaveSelectHandler handler);
+		SPIDigitalPot(byte csPin);
+
+		SPIDigitalPot(SPIDigitalPot_slaveSelectHandler handler, byte mark);
+		SPIDigitalPot(SPIDigitalPot_slaveSelectHandler handler, byte mark, byte numberOfChannels);
 
 		void init();
 		void reverseMode();
@@ -51,8 +63,11 @@ class SPIDigitalPot
 	private:
 		byte _reverseMode;
 		byte _csPin;
+		byte _mark;
 		byte _numberOfChannels;
 		byte _selectedChannel;
+		boolean _slaveSelectUseHandler;
+		SPIDigitalPot_slaveSelectHandler _slaveSelectHandler;
 };
 
 #endif
