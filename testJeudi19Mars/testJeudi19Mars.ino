@@ -47,7 +47,8 @@ Tween intensityTween, loaderTween;
 
 /*---------------*/
 
-void colorChangeMethod(byte red, byte green, byte blue, byte redChannel, byte greenChannel, byte blueChannel, byte potID){
+void colorChangeMethod(byte red, byte green, byte blue, byte redChannel, byte greenChannel, byte blueChannel, byte mark){
+  byte potID = mark;
   digitalPot[potID].write(redChannel, red);
   digitalPot[potID].write(greenChannel, green);
   digitalPot[potID].write(blueChannel, blue);
