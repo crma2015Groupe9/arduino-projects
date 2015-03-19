@@ -12,8 +12,11 @@ class SPIStackManager
 		void init();
 
 		void start();
-		void select(byte deviceID);
-		void selectDeviceAtIndex(byte index);
+		boolean select(byte deviceID);
+		boolean selectDeviceAtIndex(byte index);
+		boolean unselect(byte deviceID);
+		boolean unselectDeviceAtIndex(byte index);
+		void unselectCurrentDevice();
 		void end();
 	private:
 		SPIStackableDevice *_devices;
@@ -22,6 +25,9 @@ class SPIStackManager
 		boolean _active;
 		boolean _useHandler;
 		SPIStackableDevice_slaveSelectHandler _slaveSelectHandler;
+
+		boolean _useDeviceSelectHandler(byte deviceIndex);
+		byte _getIndexForDeviceID(byte deviceID);
 };
 
 #endif
