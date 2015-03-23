@@ -27,7 +27,6 @@ All text above, and the splash screen below must be included in any redistributi
 
 Adafruit_BLE_UART BTLEserial = Adafruit_BLE_UART(ADAFRUITBLE_REQ, ADAFRUITBLE_RDY, ADAFRUITBLE_RST);
 
-const int BUFFER_SIZE = JSON_OBJECT_SIZE(2);
 // DynamicJsonBuffer jsonBuffer;
 boolean getJsonString = false;
 String jsonString = "";
@@ -99,6 +98,7 @@ void loop()
             char json[jsonLength];
             jsonString.toCharArray(json, jsonLength);
             parseJson(json);
+            test();
 
             // const char* test = root["BlogName"].asString();
             // Serial.print(test);
@@ -137,7 +137,9 @@ void loop()
 
 void parseJson(char* json)
 {
-    json = "{\"sensor\":\"gps\",\"time\":1351824120}";
+    // char test[] = "{\"sensor\":\"gps\",\"time\":1351824120}";
+
+    const int BUFFER_SIZE = JSON_OBJECT_SIZE(2);
     StaticJsonBuffer<BUFFER_SIZE> jsonBuffer;
     JsonObject& root = jsonBuffer.parseObject(json);
 
@@ -148,5 +150,24 @@ void parseJson(char* json)
     }
     else {
         Serial.println("success");
+    }
+}
+
+void test()
+{
+    const int BUFFER_SIZE = JSON_OBJECT_SIZE(2);
+    StaticJsonBuffer<BUFFER_SIZE> jsonBuffer;
+    // StaticJsonBuffer<200> jsonBuffer;
+
+    char json[] = "{\"BlogName\":3,\"BlogDomain\":4}";
+
+    JsonObject& root = jsonBuffer.parseObject(json);
+
+    if (!root.success()) {
+        Serial.println("parseObject() failed");
+        return;
+    }
+    else {
+        Serial.println("parseObject() success");
     }
 }
