@@ -93,11 +93,15 @@ void loop()
 
         if (data == "END") {
             getJsonString = false;
-            Serial.print(jsonString);
+            // Serial.print(jsonString);
+
             int jsonLength = jsonString.length();
+            jsonString += '\0';
+            jsonLength = jsonString.length();
             char json[jsonLength];
             jsonString.toCharArray(json, jsonLength);
-            parseJson(json);
+            
+            parseJson(json, jsonLength);
             test();
 
             // const char* test = root["BlogName"].asString();
@@ -112,7 +116,6 @@ void loop()
         if (data == "START") {
             getJsonString = true;
         }
-
 
 
         // Next up, see if we have any data to get from the Serial console
@@ -135,10 +138,8 @@ void loop()
     }
 }
 
-void parseJson(char* json)
+void parseJson(char* json, int jsonLength)
 {
-    // char test[] = "{\"sensor\":\"gps\",\"time\":1351824120}";
-
     const int BUFFER_SIZE = JSON_OBJECT_SIZE(2);
     StaticJsonBuffer<BUFFER_SIZE> jsonBuffer;
     JsonObject& root = jsonBuffer.parseObject(json);
